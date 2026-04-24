@@ -1,0 +1,36 @@
+{
+    "model_config": {
+        "gnn_layers": 3,
+        "lstm_hidden_size": 128,
+        "attention_heads": 8,
+        "sequence_length": 30,
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001
+    },
+    "data_config": {
+        "default_period": "1y",
+        "default_interval": "1d",
+        "technical_indicators": [
+            "SMA_10", "SMA_20", "SMA_50",
+            "EMA_12", "EMA_26",
+            "MACD", "RSI", "BB_Width",
+            "Stoch_K", "Williams_R", "ATR"
+        ],
+        "clustering": {
+            "n_clusters": 3,
+            "correlation_threshold": 0.3
+        }
+    },
+    "sentiment_config": {
+        "model_name": "ProsusAI/finbert",
+        "fallback_model": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+        "news_sources": ["mock"],
+        "sentiment_threshold": 0.1
+    },
+    "app_config": {
+        "host": "0.0.0.0",
+        "port": 5000,
+        "debug": true,
+        "cache_timeout": 3600
+    }
+}
