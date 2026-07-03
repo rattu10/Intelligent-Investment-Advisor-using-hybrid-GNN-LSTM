@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Predictions - Intelligent Investment Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .main-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin: 20px 0;
+            min-height: calc(100vh - 40px);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .sidebar {
+            background: #ffffff;
+            border-radius: 20px 0 0 20px;
+            border-right: 1px solid #e2e8f0;
+            color: #0f172a;
+            min-height: calc(100vh - 40px);
+        }
+
+        .sidebar h4 {
+            color: #0f172a;
+        }
+        
+        .sidebar .nav-link {
+            color: #475569;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+        
+        .content-area {
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 0 20px 20px 0;
+        }
+        
+        .prediction-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            color: #0f172a;
+        }
+        
+        .btn-custom {
+            background: #4f46e5;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-custom:hover {
+            background: #4338ca;
+            color: white;
+        }
+        
+        .form-control, .form-select {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            border-radius: 8px;
+            padding: 12px 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #4f46e5;
+            color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+        }
+        
+        .price-display {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .recommendation-badge {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .recommendation-buy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .recommendation-hold {
+            background: #fef3c7;
+            color: #78350f;
+        }
+        
+        .recommendation-sell {
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+        
+        .text-muted {
+            color: #64748b !important;
+        }
+        
+        .cluster-badge {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            border-radius: 6px;
+            padding: 5px 12px;
+            margin: 4px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
+
+        .form-label {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .table {
+            color: #0f172a !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8fafc;
+        }
+
+        .table th {
+            color: #475569;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .alert-info {
+            background-color: #e0e7ff;
+            border-color: #c7d2fe;
+            color: #3730a3;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="main-container">
+                    <div class="row g-0">
+                        <!-- Sidebar -->
+                        <div class="col-md-3">
+                            <div class="sidebar p-3">
+                                <div class="text-center mb-4">
+                                    <h4><i class="fas fa-chart-line me-2"></i>Intelligent Advisor</h4>
+                                </div>
+                                
+                                <nav class="nav flex-column">
+                                    <a class="nav-link" href="/dashboard">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a class="nav-link active" href="/predict">
+                                        <i class="fas fa-crystal-ball me-2"></i>Price Predictions
+                                    </a>
+                                    <a class="nav-link" href="/recommendations">
+                                        <i class="fas fa-lightbulb me-2"></i>Recommendations
+                                    </a>
+                                    <a class="nav-link" href="/portfolio">
+                                        <i class="fas fa-briefcase me-2"></i>My Portfolio
+                                    </a>
+                                </nav>
+                                
+                                <div class="mt-auto pt-4">
+                                    <a class="nav-link" href="/logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content -->
+                        <div class="col-md-9">
+                            <div class="content-area">
+                                <h2 class="mb-4">Stock Price Predictions</h2>
+                                
+                                <!-- Input Form -->
+                                <div class="prediction-card">
+                                    <h5 class="mb-3"><i class="fas fa-search me-2"></i>Search & Predict</h5>
+                                    
+                                    <form id="predictionForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="stockSymbol" class="form-label">Stock Symbol</label>
+                                                <input type="text" class="form-control" id="stockSymbol" placeholder="e.g., AAPL, GOOGL, RELIANCE.NS" required>
+                                                <div class="form-text">Enter any valid stock ticker symbol</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="predictionDays" class="form-label">Prediction Period</label>
+                                                <select class="form-select" id="predictionDays" required>
+                                                    <option value="7">7 days</option>
+                                                    <option value="14">14 days</option>
+                                                    <option value="21">21 days</option>
+                                                    <option value="30">30 days</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-custom">
+                                            <i class="fas fa-magic me-2"></i>Predict Stock Price
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Loading Indicator -->
+                                <div id="loadingIndicator" class="prediction-card text-center d-none">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Analyzing market data and generating prediction...</p>
+                                </div>
+                                
+                                <!-- Results -->
+                                <div id="resultsSection" class="d-none">
+                                    <!-- Price Summary -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="price-display">
+                                                <h6>Current Price</h6>
+                                                <h3 id="currentPriceUSD">$0.00</h3>
+                                                <p class="mb-0" id="currentPriceINR">₹0.00</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="price-display">
+                                                <h6>Predicted Price</h6>
+                                                <h3 id="predictedPriceUSD">$0.00</h3>
+                                                <p class="mb-0" id="predictedPriceINR">₹0.00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Chart -->
+                                    <div class="prediction-card">
+                                        <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Price Forecast Chart</h5>
+                                        <div id="predictionChart"></div>
+                                    </div>
+                                    
+                                    <!-- Analysis -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="prediction-card">
+                                                <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Prediction Summary</h5>
+                                                <div id="predictionSummary"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="prediction-card">
+                                                <h5 class="mb-3"><i class="fas fa-lightbulb me-2"></i>Recommendation</h5>
+                                                <div id="recommendationSection"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="prediction-card text-center">
+                                        <button class="btn btn-outline-primary me-2" onclick="addToWatchlist()">
+                                            <i class="fas fa-plus me-2"></i>Add to Watchlist
+                                        </button>
+                                        <button class="btn btn-success" onclick="addToPortfolio()">
+                                            <i class="fas fa-briefcase me-2"></i>Add to Portfolio
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSymbol = '';
+        let currentPrice = 0;
+        
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const symbol = document.getElementById('stockSymbol').value.toUpperCase();
+            const days = document.getElementById('predictionDays').value;
+            
+            currentSymbol = symbol;
+            
+            // Show loading
+            document.getElementById('loadingIndicator').classList.remove('d-none');
+            document.getElementById('resultsSection').classList.add('d-none');
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        symbol: symbol,
+                        days: parseInt(days)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Prediction failed. Please try again.');
+            } finally {
+                document.getElementById('loadingIndicator').classList.add('d-none');
+            }
+        });
+        
+        function displayResults(data) {
+            currentPrice = data.current_price.usd;
+            
+            // Update price displays
+            document.getElementById('currentPriceUSD').textContent = data.current_price.usd_formatted;
+            document.getElementById('currentPriceINR').textContent = data.current_price.inr_formatted;
+            
+            const lastPrediction = data.predictions.usd[data.predictions.usd.length - 1];
+            const lastPredictionINR = data.predictions.inr[data.predictions.inr.length - 1];
+            
+            document.getElementById('predictedPriceUSD').textContent = '$' + lastPrediction.toFixed(2);
+            document.getElementById('predictedPriceINR').textContent = '₹' + lastPredictionINR.toFixed(2);
+            
+            // Create enhanced chart
+            createEnhancedPredictionChart(data);
+            
+            // Display enhanced summary
+            displayEnhancedSummary(data.prediction_summary);
+            
+            // Display recommendation
+            displayRecommendation(data.recommendation);
+            
+            // Show results
+            document.getElementById('resultsSection').classList.remove('d-none');
+        }
+        
+        function createEnhancedPredictionChart(data) {
+            // Historical data trace
+            const historicalTrace = {
+                x: data.historical_data.usd.dates,
+                y: data.historical_data.usd.prices,
+                mode: 'lines',
+                name: 'Historical Price',
+                line: { color: '#6c757d', width: 2 },
+                hovertemplate: '<b>Historical</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+            };
+            
+            // Current price marker
+            const currentTrace = {
+                x: [data.historical_data.usd.dates[data.historical_data.usd.dates.length - 1]],
+                y: [data.current_price.usd],
+                mode: 'markers',
+                name: 'Current Price',
+                marker: { 
+                    color: '#dc3545', 
+                    size: 12,
+                    symbol: 'diamond'
+                },
+                hovertemplate: '<b>Current Price</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+            };
+            
+            // Predicted price trace
+            const predictionTrace = {
+                x: data.prediction_dates,
+                y: data.predictions.usd,
+                mode: 'lines+markers',
+                name: 'Predicted Price',
+                line: { 
+                    color: '#667eea', 
+                    width: 3,
+                    dash: 'dot'
+                },
+                marker: { 
+                    color: '#667eea', 
+                    size: 8 
+                },
+                hovertemplate: '<b>Prediction</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+            };
+            
+            // Support and resistance levels
+            const supportLevel = parseFloat(data.prediction_summary.support_level.replace('$', ''));
+            const resistanceLevel = parseFloat(data.prediction_summary.resistance_level.replace('$', ''));
+            
+            // Get all dates for the lines
+            const allDates = [...data.historical_data.usd.dates, ...data.prediction_dates];
+            
+            const supportTrace = {
+                x: allDates,
+                y: Array(allDates.length).fill(supportLevel),
+                mode: 'lines',
+                name: 'Support Level',
+                line: { 
+                    color: '#28a745', 
+                    width: 1, 
+                    dash: 'dash' 
+                },
+                hovertemplate: '<b>Support Level</b><br>Price: $%{y:.2f}<extra></extra>'
+            };
+            
+            const resistanceTrace = {
+                x: allDates,
+                y: Array(allDates.length).fill(resistanceLevel),
+                mode: 'lines',
+                name: 'Resistance Level',
+                line: { 
+                    color: '#ffc107', 
+                    width: 1, 
+                    dash: 'dash' 
+                },
+                hovertemplate: '<b>Resistance Level</b><br>Price: $%{y:.2f}<extra></extra>'
+            };
+            
+            const layout = {
+                title: {
+                    text: `${data.symbol} - ${data.company_name}<br><sub>Last Updated: ${data.last_updated || 'N/A'}</sub>`,
+                    font: { size: 16 }
+                },
+                xaxis: { 
+                    title: 'Date',
+                    type: 'date',
+                    tickformat: '%m/%d'
+                },
+                yaxis: { 
+                    title: 'Price (USD)',
+                    tickformat: '$.2f'
+                },
+                showlegend: true,
+                legend: {
+                    x: 0,
+                    y: 1,
+                    bgcolor: 'rgba(255,255,255,0.8)'
+                },
+                plot_bgcolor: 'rgba(248,249,250,0.8)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                hovermode: 'closest',
+                annotations: [
+                    {
+                        x: data.prediction_dates[0],
+                        y: data.predictions.usd[0],
+                        xref: 'x',
+                        yref: 'y',
+                        text: 'Prediction Starts',
+                        showarrow: true,
+                        arrowhead: 2,
+                        arrowsize: 1,
+                        arrowwidth: 2,
+                        arrowcolor: '#667eea',
+                        font: { color: '#667eea' },
+                        bgcolor: 'rgba(255,255,255,0.8)',
+                        bordercolor: '#667eea',
+                        borderwidth: 1
+                    }
+                ]
+            };
+            
+            const traces = [historicalTrace, currentTrace, predictionTrace, supportTrace, resistanceTrace];
+            
+            Plotly.newPlot('predictionChart', traces, layout, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d']
+            });
+        }
+        
+        function displayEnhancedSummary(summary) {
+            const summaryHtml = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>1 Week Performance:</span>
+                                <strong class="${summary.week_performance.startsWith('+') ? 'text-success' : 'text-danger'}">
+                                    ${summary.week_performance}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>1 Month Performance:</span>
+                                <strong class="${summary.month_performance.startsWith('+') ? 'text-success' : 'text-danger'}">
+                                    ${summary.month_performance}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>3 Month Performance:</span>
+                                <strong class="${summary.quarter_performance.startsWith('+') ? 'text-success' : 'text-danger'}">
+                                    ${summary.quarter_performance}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Expected Change:</span>
+                                <strong class="${summary.predicted_change.startsWith('+') ? 'text-success' : 'text-danger'}">
+                                    ${summary.predicted_change}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Price Volatility:</span>
+                                <strong class="${
+                                    summary.volatility === 'Low' ? 'text-success' : 
+                                    summary.volatility === 'Medium' ? 'text-warning' : 'text-danger'
+                                }">${summary.volatility}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Trading Volume:</span>
+                                <strong class="${
+                                    summary.volume_trend === 'High' ? 'text-success' : 
+                                    summary.volume_trend === 'Normal' ? 'text-primary' : 'text-warning'
+                                }">${summary.volume_trend}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Price Trend:</span>
+                                <strong class="${
+                                    summary.trend.includes('Rising') ? 'text-success' : 
+                                    summary.trend.includes('Declining') ? 'text-danger' : 'text-warning'
+                                }">${summary.trend}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Price Range:</span>
+                                <strong class="text-info">${summary.price_range}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Accuracy Metrics Section -->
+                ${summary.prediction_accuracy ? `
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-primary mb-3"><i class="fas fa-target me-2"></i>Prediction Accuracy Metrics</h6>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Model Accuracy:</span>
+                                <strong class="text-primary">${summary.prediction_accuracy}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Confidence Level:</span>
+                                <strong class="${
+                                    summary.model_confidence === 'Very High' || summary.model_confidence === 'High' ? 'text-success' : 
+                                    summary.model_confidence === 'Medium' ? 'text-warning' : 'text-danger'
+                                }">${summary.model_confidence}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Technical Signal:</span>
+                                <strong class="${
+                                    summary.technical_signal === 'Bullish' ? 'text-success' : 
+                                    summary.technical_signal === 'Bearish' ? 'text-danger' : 'text-info'
+                                }">${summary.technical_signal}</strong>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Algorithm:</span>
+                                <strong class="text-secondary">Improved Multi-Factor</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <small class="text-muted">Support Level</small>
+                            <div class="h5 text-success">${summary.support_level}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <small class="text-muted">Resistance Level</small>
+                            <div class="h5 text-warning">${summary.resistance_level}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('predictionSummary').innerHTML = summaryHtml;
+        }
+        
+        function displayRecommendation(recommendation) {
+            const badgeClass = `recommendation-${recommendation.action.toLowerCase()}`;
+            
+            const recommendationHtml = `
+                <div class="text-center mb-3">
+                    <span class="recommendation-badge ${badgeClass}">
+                        ${recommendation.action}
+                    </span>
+                </div>
+                <p><strong>Analysis:</strong> ${recommendation.reason}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Risk Level:</span>
+                            <strong class="${
+                                recommendation.risk_level === 'Low' ? 'text-success' : 
+                                recommendation.risk_level === 'Medium' ? 'text-warning' : 'text-danger'
+                            }">${recommendation.risk_level}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between">
+                            <span>Confidence:</span>
+                            <strong class="${
+                                recommendation.confidence === 'High' || recommendation.confidence === 'Very High' ? 'text-success' : 
+                                recommendation.confidence === 'Medium' || recommendation.confidence === 'Moderate' ? 'text-warning' : 'text-danger'
+                            }">${recommendation.confidence}</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add accuracy note if available -->
+                ${recommendation.accuracy_note ? `
+                <div class="mt-2 p-2 bg-info bg-opacity-10 rounded">
+                    <small class="text-info">
+                        <i class="fas fa-bullseye me-1"></i>
+                        ${recommendation.accuracy_note}
+                    </small>
+                </div>
+                ` : ''}
+                
+                <div class="mt-3 p-2 bg-light rounded">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Remember: This is AI-generated analysis for educational purposes. Always consult with financial advisors before making investment decisions.
+                    </small>
+                </div>
+            `;
+            
+            document.getElementById('recommendationSection').innerHTML = recommendationHtml;
+        }
+        
+        async function addToWatchlist() {
+            if (!currentSymbol) {
+                alert('Please make a prediction first');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/add-to-watchlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ symbol: currentSymbol })
+                });
+                
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                alert('Failed to add to watchlist');
+            }
+        }
+        
+        function addToPortfolio() {
+            if (!currentSymbol) {
+                alert('Please make a prediction first');
+                return;
+            }
+            
+            const shares = prompt('How many shares do you want to add?');
+            if (!shares || isNaN(shares) || shares <= 0) {
+                alert('Please enter a valid number of shares');
+                return;
+            }
+            
+            const purchasePrice = prompt(`Purchase price per share (current: $${currentPrice.toFixed(2)}):`, currentPrice.toFixed(2));
+            if (!purchasePrice || isNaN(purchasePrice) || purchasePrice <= 0) {
+                alert('Please enter a valid purchase price');
+                return;
+            }
+            
+            fetch('/api/add-to-portfolio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    symbol: currentSymbol,
+                    shares: parseFloat(shares),
+                    purchase_price: parseFloat(purchasePrice)
+                })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => alert('Failed to add to portfolio'));
+        }
+    </script>
+</body>
+</html>

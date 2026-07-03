@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Intelligent Investment Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .main-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin: 20px 0;
+            min-height: calc(100vh - 40px);
+            border: 1px solid #e2e8f0;
+        }
+
+        .sidebar {
+            background: #ffffff;
+            border-radius: 20px 0 0 20px;
+            border-right: 1px solid #e2e8f0;
+            color: #0f172a;
+            min-height: calc(100vh - 40px);
+        }
+
+        .sidebar h4 {
+            color: #0f172a;
+        }
+
+        .sidebar .nav-link {
+            color: #475569;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+
+        .content-area {
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease;
+            color: #0f172a;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .btn-custom {
+            background: #4f46e5;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-custom:hover {
+            background: #4338ca;
+            color: white;
+        }
+
+        .quick-action-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-2px);
+            border-color: #4f46e5;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        
+        .text-muted {
+            color: #64748b !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="main-container">
+                    <div class="row g-0">
+                        <!-- Sidebar -->
+                        <div class="col-md-3">
+                            <div class="sidebar p-3">
+                                <div class="text-center mb-4">
+                                    <h4><i class="fas fa-chart-line me-2"></i>Intelligent Advisor</h4>
+                                    <p class="text-muted mb-0">Welcome back!</p>
+                                </div>
+
+                                <nav class="nav flex-column">
+                                    <a class="nav-link active" href="/dashboard">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a class="nav-link" href="/predict">
+                                        <i class="fas fa-crystal-ball me-2"></i>Price Predictions
+                                    </a>
+                                    <a class="nav-link" href="/recommendations">
+                                        <i class="fas fa-lightbulb me-2"></i>Recommendations
+                                    </a>
+                                    <a class="nav-link" href="/portfolio">
+                                        <i class="fas fa-briefcase me-2"></i>My Portfolio
+                                    </a>
+                                </nav>
+
+                                <div class="mt-auto pt-4">
+                                    <a class="nav-link" href="/logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="col-md-9">
+                            <div class="content-area">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2>Dashboard</h2>
+                                    <div class="text-muted">
+                                        <i class="fas fa-calendar me-2"></i>
+                                        <span id="currentDate"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Stats Cards -->
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="stat-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="stat-icon me-3"
+                                                    style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                                    <i class="fas fa-wallet"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-muted mb-1">Portfolio Value</h6>
+                                                    <h4 class="mb-0" id="portfolioValue">Loading...</h4>
+                                                    <small class="text-success" id="portfolioChange">+0.00%</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="stat-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="stat-icon me-3"
+                                                    style="background: linear-gradient(135deg, #007bff, #6f42c1);">
+                                                    <i class="fas fa-chart-line"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-muted mb-1">Total Returns</h6>
+                                                    <h4 class="mb-0" id="totalReturns">₹0</h4>
+                                                    <small class="text-primary" id="returnPercentage">0.00%</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="stat-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="stat-icon me-3"
+                                                    style="background: linear-gradient(135deg, #fd7e14, #e83e8c);">
+                                                    <i class="fas fa-eye"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-muted mb-1">Watchlist</h6>
+                                                    <h4 class="mb-0">{{ watchlist_count }}</h4>
+                                                    <small class="text-warning">Stocks tracked</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-6">
+                                        <div class="stat-card">
+                                            <div class="d-flex align-items-center">
+                                                <div class="stat-icon me-3"
+                                                    style="background: linear-gradient(135deg, #10b981, #059669);">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-muted mb-1">Model Accuracy</h6>
+                                                    <h4 class="mb-0">94.8%</h4>
+                                                    <small class="text-success">5.2% error (GNN-LSTM)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Actions -->
+                                <div class="row mt-4">
+                                    <div class="col-lg-6">
+                                        <h5 class="mb-3">Quick Actions</h5>
+
+                                        <a href="/predict" class="quick-action-card">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-crystal-ball fa-2x me-3"></i>
+                                                <div>
+                                                    <h6 class="mb-1">Get Price Prediction</h6>
+                                                    <p class="mb-0 opacity-75">Predict stock prices for next 7-30 days
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <a href="/recommendations" class="quick-action-card">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-lightbulb fa-2x me-3"></i>
+                                                <div>
+                                                    <h6 class="mb-1">View Recommendations</h6>
+                                                    <p class="mb-0 opacity-75">Get personalized investment suggestions
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <h5 class="mb-3">Market Insights</h5>
+
+                                        <div class="stat-card">
+                                            <h6 class="mb-3">Top Performing Stocks Today</h6>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <div>
+                                                    <strong>AAPL</strong>
+                                                    <small class="text-muted d-block">Apple Inc.</small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="text-success">+2.5%</div>
+                                                    <small class="text-muted">$150.25</small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <div>
+                                                    <strong>GOOGL</strong>
+                                                    <small class="text-muted d-block">Alphabet Inc.</small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="text-success">+1.8%</div>
+                                                    <small class="text-muted">$2,800.50</small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>MSFT</strong>
+                                                    <small class="text-muted d-block">Microsoft Corp.</small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="text-success">+1.2%</div>
+                                                    <small class="text-muted">$380.75</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Recent Activity -->
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="stat-card">
+                                            <h5 class="mb-3">Recent Activity</h5>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                    style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-plus text-white"></i>
+                                                </div>
+                                                <div>
+                                                    <strong>Welcome to Intelligent Investment Advisor!</strong>
+                                                    <div class="text-muted small">Complete your first stock prediction
+                                                        to get started</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-center mt-4">
+                                                <a href="/predict" class="btn btn-custom">
+                                                    <i class="fas fa-rocket me-2"></i>Make Your First Prediction
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"></script>
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Load portfolio data
+        async function loadPortfolioData() {
+            try {
+                const response = await fetch('/api/portfolio');
+                const data = await response.json();
+
+                if (data.success) {
+                    const portfolio = data.portfolio;
+
+                    // Update portfolio value
+                    document.getElementById('portfolioValue').textContent =
+                        '₹' + portfolio.total_value_inr.toLocaleString('en-IN');
+
+                    // Update total returns
+                    document.getElementById('totalReturns').textContent =
+                        '₹' + portfolio.total_return_inr.toLocaleString('en-IN');
+
+                    // Update return percentage
+                    const returnPercentage = portfolio.return_percentage;
+                    document.getElementById('returnPercentage').textContent =
+                        returnPercentage.toFixed(2) + '%';
+
+                    // Update portfolio change color
+                    const portfolioChangeElement = document.getElementById('portfolioChange');
+                    portfolioChangeElement.textContent = '+' + returnPercentage.toFixed(2) + '%';
+
+                    if (returnPercentage >= 0) {
+                        portfolioChangeElement.className = 'text-success';
+                    } else {
+                        portfolioChangeElement.className = 'text-danger';
+                        portfolioChangeElement.textContent = returnPercentage.toFixed(2) + '%';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading portfolio data:', error);
+                // Set default values
+                document.getElementById('portfolioValue').textContent = '₹0';
+                document.getElementById('totalReturns').textContent = '₹0';
+                document.getElementById('returnPercentage').textContent = '0.00%';
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            loadPortfolioData();
+        });
+    </script>
+</body>
+
+</html>

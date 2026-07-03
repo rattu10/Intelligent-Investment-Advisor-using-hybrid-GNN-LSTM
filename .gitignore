@@ -1,0 +1,28 @@
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+venv_simple/
+adv/
+.venv/
+env/
+ENV/
+
+# Local databases (recreated on startup)
+*.db
+*.sqlite
+instance/
+src/instance/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local temporary cache and logs
+.tempmediaStorage/
+user_input_files/
+.idea/
+.vscode/

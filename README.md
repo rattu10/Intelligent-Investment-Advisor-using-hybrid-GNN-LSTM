@@ -1,4 +1,4 @@
-# Stock Market Forecasting - GNN-LSTM Framework
+# Intelligent Investment Advisor using Machine Learning
 
 ## 🎯 Project Overview
 
@@ -51,6 +51,10 @@ chmod +x start.sh
 ### Option 2: Manual Installation
 
 1. **Clone or download the project**
+   ```bash
+   git clone https://github.com/your-username/stock-forecasting-gnn-lstm.git
+   cd stock-forecasting-gnn-lstm
+   ```
 
 2. **Create a virtual environment:**
    ```bash
@@ -75,13 +79,25 @@ chmod +x start.sh
    ```
 
 5. **Run the application:**
+   On Windows (PowerShell):
    ```bash
-   python app.py
+   cd src
+   $env:FLASK_APP="app_user_friendly.py"
+   $env:PYTHONIOENCODING="utf-8"
+   python -m flask run --host=127.0.0.1 --port=5000 --no-reload
+   ```
+   
+   On macOS/Linux (Bash):
+   ```bash
+   cd src
+   export FLASK_APP="app_user_friendly.py"
+   export PYTHONIOENCODING="utf-8"
+   python -m flask run --host=127.0.0.1 --port=5000 --no-reload
    ```
 
 6. **Open your browser and go to:**
    ```
-   http://localhost:5000
+   http://127.0.0.1:5000
    ```
 
 ## 💻 Usage Instructions
@@ -107,20 +123,36 @@ chmod +x start.sh
 
 ```
 stock-forecasting/
-├── app.py                     # Main Flask application
+├── src/
+│   ├── app_user_friendly.py   # Main Full-Featured Flask application (Auth, Dashboard, Portfolio)
+│   ├── app.py                 # Legacy/Basic single-page Flask application
+│   ├── config.json            # Configuration file
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── gnn_lstm_model.py  # GNN-LSTM implementation
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── data_processor.py  # Data fetching and preprocessing
+│   │   ├── technical_indicators.py # Technical analysis and clustering
+│   │   ├── ontology_sentiment.py   # FinBERT Ontology sentiment analysis
+│   │   └── sentiment_analyzer.py   # Basic sentiment analysis helper
+│   └── templates/
+│       ├── home.html          # Landing page (Welcome, stats overview)
+│       ├── login.html         # User login portal (Modern light theme)
+│       ├── register.html      # User registration portal
+│       ├── profile_setup.html # Onboarding/Risk preference configuration
+│       ├── dashboard.html     # Main dashboard analytics (Model Accuracy MAPE)
+│       ├── predict.html       # Interactive GNN-LSTM stock prediction interface
+│       ├── recommendations.html # Personalized stock recommendations
+│       └── portfolio.html     # User portfolio tracking & USD/INR conversion
 ├── requirements.txt           # Python dependencies
-├── start.sh / start.bat       # Startup scripts
-├── README.md                  # This file
-├── models/
-│   ├── __init__.py
-│   └── gnn_lstm_model.py      # GNN-LSTM implementation
-├── utils/
-│   ├── __init__.py
-│   ├── data_processor.py      # Data fetching and preprocessing
-│   ├── technical_indicators.py # Technical analysis and clustering
-│   └── sentiment_analyzer.py   # Ontology-driven sentiment analysis
-└── templates/
-    └── index.html             # Web interface
+├── requirements_simple.txt    # Lightweight dependencies (No-ML fallback)
+├── requirements_stable.txt    # Pinned/Stable dependencies
+├── start.bat                  # One-click Windows startup script
+├── start.sh                   # One-click Unix startup script
+├── benchmark_models.py        # Model benchmarking script
+├── ADVANCED_RESEARCH_IMPLEMENTATION.md # Technical research mapping
+└── LICENSE                    # MIT terms of use
 ```
 
 ## 🧠 Model Architecture
@@ -177,7 +209,7 @@ stock-forecasting/
 ## ⚙️ Configuration
 
 ### Model Parameters
-- **GNN Layers**: 3 (configurable in `gnn_lstm_model.py`)
+- **GNN Layers**: 3 (configurable in `src/models/gnn_lstm_model.py`)
 - **LSTM Hidden Size**: 128
 - **Attention Heads**: 8
 - **Sequence Length**: 30 days
@@ -191,17 +223,17 @@ stock-forecasting/
 ## 🔧 Customization
 
 ### Adding New Technical Indicators
-1. Modify `utils/technical_indicators.py`
+1. Modify `src/utils/technical_indicators.py`
 2. Add indicator calculation in `calculate_indicators()`
 3. Update clustering logic if needed
 
 ### Integrating Real News APIs
-1. Update `utils/sentiment_analyzer.py`
+1. Update `src/utils/sentiment_analyzer.py` or `src/utils/ontology_sentiment.py`
 2. Replace `get_financial_news()` method
 3. Add API keys to configuration
 
 ### Model Architecture Changes
-1. Modify `models/gnn_lstm_model.py`
+1. Modify `src/models/gnn_lstm_model.py`
 2. Adjust layer sizes, depths, or architectures
 3. Update training parameters
 
@@ -224,7 +256,7 @@ The application provides:
    ```
 
 2. **Port Already in Use**
-   - Change port in `app.py`: `app.run(port=5001)`
+   - Change port in `app_user_friendly.py`: `app.run(port=5001)`
    - Or kill existing process
 
 3. **Data Fetching Issues**
@@ -249,12 +281,13 @@ The application provides:
 ### Local Development
 ```bash
 export FLASK_ENV=development
-python app.py
+export FLASK_APP=app_user_friendly.py
+python -m flask run --no-reload
 ```
 
 ### Production Deployment
 ```bash
-gunicorn --bind 0.0.0.0:5000 app:app
+gunicorn --bind 0.0.0.0:5000 app_user_friendly:app
 ```
 
 ### Docker Deployment
@@ -264,7 +297,7 @@ COPY . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
 EXPOSE 5000
-CMD ["python", "app.py"]
+CMD ["python", "app_user_friendly.py"]
 ```
 
 ## 📝 Research Paper Abstract
@@ -283,7 +316,7 @@ This application implements the proposed hybrid framework that bridges time-seri
 
 ## 📄 License
 
-This project is for educational and research purposes. Please ensure compliance with financial data usage policies.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 

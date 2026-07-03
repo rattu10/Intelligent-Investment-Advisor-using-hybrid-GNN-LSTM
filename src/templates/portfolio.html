@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Intelligent Investment Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .main-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin: 20px 0;
+            min-height: calc(100vh - 40px);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .sidebar {
+            background: #ffffff;
+            border-radius: 20px 0 0 20px;
+            border-right: 1px solid #e2e8f0;
+            color: #0f172a;
+            min-height: calc(100vh - 40px);
+        }
+
+        .sidebar h4 {
+            color: #0f172a;
+        }
+        
+        .sidebar .nav-link {
+            color: #475569;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: #f1f5f9;
+            color: #4f46e5;
+        }
+        
+        .content-area {
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 0 20px 20px 0;
+        }
+        
+        .portfolio-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            color: #0f172a;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .holding-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            color: #0f172a;
+        }
+        
+        .holding-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+        }
+        
+        .return-positive {
+            color: #059669;
+            font-weight: bold;
+        }
+        
+        .return-negative {
+            color: #e11d48;
+            font-weight: bold;
+        }
+        
+        .btn-custom {
+            background: #4f46e5;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-custom:hover {
+            background: #4338ca;
+            color: white;
+        }
+        
+        .currency-toggle {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            color: #475569;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .currency-toggle:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+        
+        .empty-portfolio {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .btn-outline-primary {
+            border-color: #cbd5e1;
+            color: #475569;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+
+        .btn-outline-secondary {
+            border-color: #cbd5e1;
+            color: #475569;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #0f172a;
+        }
+
+        .dropdown-menu {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+        }
+
+        .dropdown-item {
+            color: #334155;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .progress {
+            background-color: #e2e8f0;
+        }
+
+        .text-muted {
+            color: #64748b !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="main-container">
+                    <div class="row g-0">
+                        <!-- Sidebar -->
+                        <div class="col-md-3">
+                            <div class="sidebar p-3">
+                                <div class="text-center mb-4">
+                                    <h4><i class="fas fa-chart-line me-2"></i>Intelligent Advisor</h4>
+                                </div>
+                                
+                                <nav class="nav flex-column">
+                                    <a class="nav-link" href="/dashboard">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                    <a class="nav-link" href="/predict">
+                                        <i class="fas fa-crystal-ball me-2"></i>Price Predictions
+                                    </a>
+                                    <a class="nav-link" href="/recommendations">
+                                        <i class="fas fa-lightbulb me-2"></i>Recommendations
+                                    </a>
+                                    <a class="nav-link active" href="/portfolio">
+                                        <i class="fas fa-briefcase me-2"></i>My Portfolio
+                                    </a>
+                                </nav>
+                                
+                                <div class="mt-auto pt-4">
+                                    <a class="nav-link" href="/logout">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content -->
+                        <div class="col-md-9">
+                            <div class="content-area">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+                                    <h2>My Portfolio</h2>
+                                    <div>
+                                        <button class="btn currency-toggle me-2" id="currencyToggle" onclick="toggleCurrency()">
+                                            Show in <span id="currencyText">INR</span>
+                                        </button>
+                                        <button class="btn btn-custom" onclick="refreshPortfolio()">
+                                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Loading -->
+                                <div id="loadingIndicator" class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Loading your portfolio...</p>
+                                </div>
+                                
+                                <!-- Portfolio Summary -->
+                                <div id="portfolioSummary" class="d-none">
+                                    <div class="summary-card">
+                                        <div class="row">
+                                            <div class="col-md-3 text-center">
+                                                <h6 class="opacity-75">Total Value</h6>
+                                                <h3 id="totalValue">₹0</h3>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h6 class="opacity-75">Total Investment</h6>
+                                                <h3 id="totalInvestment">₹0</h3>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h6 class="opacity-75">Total Returns</h6>
+                                                <h3 id="totalReturns">₹0</h3>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h6 class="opacity-75">Return %</h6>
+                                                <h3 id="returnPercentage">0.00%</h3>
+                                            </div>
+                                        </div>
+                                        
+                                        <hr class="my-4 opacity-25">
+                                        
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h6 class="opacity-75">Portfolio Insight</h6>
+                                                <p id="portfolioSummaryText" class="mb-0">Loading insights...</p>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <h6 class="opacity-75">Diversification Score</h6>
+                                                <h4 id="diversificationScore">0/100</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Holdings -->
+                                <div id="holdingsSection" class="d-none">
+                                    <div class="portfolio-card">
+                                        <h5 class="mb-3"><i class="fas fa-list me-2"></i>Your Holdings</h5>
+                                        <div id="holdingsList">
+                                            <!-- Holdings will be loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Empty Portfolio -->
+                                <div id="emptyPortfolio" class="portfolio-card empty-portfolio d-none">
+                                    <i class="fas fa-briefcase fa-4x text-muted mb-4"></i>
+                                    <h4>Your Portfolio is Empty</h4>
+                                    <p class="text-muted mb-4">Start building your investment portfolio by adding stocks based on our recommendations.</p>
+                                    <div class="d-flex gap-3 justify-content-center">
+                                        <a href="/recommendations" class="btn btn-custom">
+                                            <i class="fas fa-lightbulb me-2"></i>View Recommendations
+                                        </a>
+                                        <a href="/predict" class="btn btn-outline-primary">
+                                            <i class="fas fa-search me-2"></i>Research Stocks
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let portfolioData = null;
+        let showInINR = true;
+        
+        async function loadPortfolio() {
+            try {
+                const response = await fetch('/api/portfolio');
+                const data = await response.json();
+                
+                document.getElementById('loadingIndicator').classList.add('d-none');
+                
+                if (data.success) {
+                    portfolioData = data.portfolio;
+                    
+                    if (portfolioData.holdings.length > 0) {
+                        displayPortfolio();
+                    } else {
+                        document.getElementById('emptyPortfolio').classList.remove('d-none');
+                    }
+                } else {
+                    document.getElementById('emptyPortfolio').classList.remove('d-none');
+                }
+            } catch (error) {
+                console.error('Error loading portfolio:', error);
+                document.getElementById('loadingIndicator').classList.add('d-none');
+                document.getElementById('emptyPortfolio').classList.remove('d-none');
+            }
+        }
+        
+        function displayPortfolio() {
+            // Update summary
+            updateSummary();
+            
+            // Display holdings
+            displayHoldings();
+            
+            // Show sections
+            document.getElementById('portfolioSummary').classList.remove('d-none');
+            document.getElementById('holdingsSection').classList.remove('d-none');
+        }
+        
+        function updateSummary() {
+            const currency = showInINR ? 'inr' : 'usd';
+            
+            if (showInINR) {
+                document.getElementById('totalValue').textContent = '₹' + portfolioData.total_value_inr.toLocaleString('en-IN');
+                document.getElementById('totalInvestment').textContent = '₹' + (portfolioData.total_investment * portfolioData.usd_to_inr_rate || 0).toLocaleString('en-IN');
+                document.getElementById('totalReturns').textContent = '₹' + portfolioData.total_return_inr.toLocaleString('en-IN');
+            } else {
+                document.getElementById('totalValue').textContent = '$' + portfolioData.total_value.toLocaleString('en-US');
+                document.getElementById('totalInvestment').textContent = '$' + portfolioData.total_investment.toLocaleString('en-US');
+                document.getElementById('totalReturns').textContent = '$' + portfolioData.total_return.toLocaleString('en-US');
+            }
+            
+            // Return percentage
+            const returnPercentage = portfolioData.return_percentage;
+            const returnElement = document.getElementById('returnPercentage');
+            returnElement.textContent = returnPercentage.toFixed(2) + '%';
+            
+            if (returnPercentage >= 0) {
+                returnElement.className = 'return-positive';
+            } else {
+                returnElement.className = 'return-negative';
+            }
+            
+            // Summary text
+            document.getElementById('portfolioSummaryText').textContent = portfolioData.summary;
+            
+            // Diversification score
+            document.getElementById('diversificationScore').textContent = portfolioData.diversification_score + '/100';
+        }
+        
+        function displayHoldings() {
+            const container = document.getElementById('holdingsList');
+            container.innerHTML = '';
+            
+            portfolioData.holdings.forEach(holding => {
+                const holdingCard = createHoldingCard(holding);
+                container.appendChild(holdingCard);
+            });
+        }
+        
+        function createHoldingCard(holding) {
+            const card = document.createElement('div');
+            card.className = 'holding-card';
+            
+            const returnClass = holding.return_percentage >= 0 ? 'return-positive' : 'return-negative';
+            const returnSign = holding.return_percentage >= 0 ? '+' : '';
+            
+            // Choose currency values
+            const currentValue = showInINR ? holding.current_value_inr : holding.current_value;
+            const totalReturn = showInINR ? holding.total_return_inr : holding.total_return;
+            const currencySymbol = showInINR ? '₹' : '$';
+            const currentValueFormatted = showInINR ? holding.current_value_inr_formatted : holding.current_value_formatted;
+            
+            card.innerHTML = `
+                <div class=\"row align-items-center\">
+                    <div class=\"col-md-3\">
+                        <h6 class=\"mb-1\">${holding.symbol}</h6>
+                        <small class=\"text-muted\">${holding.company_name}</small>
+                        <div class=\"mt-1\">
+                            <small class=\"text-muted\">${holding.shares} shares</small>
+                        </div>
+                    </div>
+                    
+                    <div class=\"col-md-2 text-center\">
+                        <div class=\"text-muted small\">Purchase Price</div>
+                        <div><strong>${currencySymbol}${holding.purchase_price.toFixed(2)}</strong></div>
+                    </div>
+                    
+                    <div class=\"col-md-2 text-center\">
+                        <div class=\"text-muted small\">Current Price</div>
+                        <div><strong>${currencySymbol}${holding.current_price.toFixed(2)}</strong></div>
+                    </div>
+                    
+                    <div class=\"col-md-2 text-center\">
+                        <div class=\"text-muted small\">Current Value</div>
+                        <div><strong>${currentValueFormatted}</strong></div>
+                    </div>
+                    
+                    <div class=\"col-md-2 text-center\">
+                        <div class=\"text-muted small\">Return</div>
+                        <div class=\"${returnClass}\">
+                            ${currencySymbol}${Math.abs(totalReturn).toFixed(2)}
+                        </div>
+                        <div class=\"${returnClass} small\">
+                            ${returnSign}${holding.return_percentage.toFixed(2)}%
+                        </div>
+                    </div>
+                    
+                    <div class=\"col-md-1 text-end\">
+                        <div class=\"dropdown\">
+                            <button class=\"btn btn-sm btn-outline-secondary dropdown-toggle\" type=\"button\" data-bs-toggle=\"dropdown\">
+                                <i class=\"fas fa-ellipsis-v\"></i>
+                            </button>
+                            <ul class=\"dropdown-menu\">
+                                <li><a class=\"dropdown-item\" href=\"#\" onclick=\"getPrediction('${holding.symbol}')\">Get Prediction</a></li>
+                                <li><a class=\"dropdown-item\" href=\"#\" onclick=\"addToWatchlist('${holding.symbol}')\">Add to Watchlist</a></li>
+                                <li><hr class=\"dropdown-divider\"></li>
+                                <li><a class=\"dropdown-item text-danger\" href=\"#\" onclick=\"removeFromPortfolio('${holding.symbol}')\">Remove</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class=\"row mt-2\">
+                    <div class=\"col-12\">
+                        <div class=\"progress\" style=\"height: 5px;\">
+                            <div class=\"progress-bar ${holding.return_percentage >= 0 ? 'bg-success' : 'bg-danger'}\" 
+                                 style=\"width: ${Math.min(Math.abs(holding.return_percentage), 100)}%\"></div>
+                        </div>
+                        <div class=\"d-flex justify-content-between mt-1\">
+                            <small class=\"text-muted\">Purchased: ${holding.purchase_date}</small>
+                            <small class=\"text-muted\">${Math.abs(holding.return_percentage).toFixed(1)}% ${holding.return_percentage >= 0 ? 'gain' : 'loss'}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function toggleCurrency() {
+            showInINR = !showInINR;
+            
+            // Update toggle button
+            document.getElementById('currencyText').textContent = showInINR ? 'USD' : 'INR';
+            
+            // Update display if portfolio is loaded
+            if (portfolioData) {
+                updateSummary();
+                displayHoldings();
+            }
+        }
+        
+        async function addToWatchlist(symbol) {
+            try {
+                const response = await fetch('/api/add-to-watchlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ symbol: symbol })
+                });
+                
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                alert('Failed to add to watchlist');
+            }
+        }
+        
+        function getPrediction(symbol) {
+            window.location.href = `/predict?symbol=${symbol}`;
+        }
+        
+        async function removeFromPortfolio(symbol) {
+            if (confirm(`Are you sure you want to remove ${symbol} from your portfolio?`)) {
+                try {
+                    const response = await fetch('/api/remove-from-portfolio', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ symbol: symbol })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        alert(data.message);
+                        refreshPortfolio();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Failed to remove from portfolio');
+                }
+            }
+        }
+        
+        function refreshPortfolio() {
+            document.getElementById('portfolioSummary').classList.add('d-none');
+            document.getElementById('holdingsSection').classList.add('d-none');
+            document.getElementById('emptyPortfolio').classList.add('d-none');
+            document.getElementById('loadingIndicator').classList.remove('d-none');
+            
+            setTimeout(() => {
+                loadPortfolio();
+            }, 1000);
+        }
+        
+        // Load portfolio when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPortfolio();
+        });
+    </script>
+</body>
+</html>

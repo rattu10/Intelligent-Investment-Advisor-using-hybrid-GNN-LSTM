@@ -1,4 +1,4 @@
-# 🚀 ADVANCED STOCK PREDICTION SYSTEM - RESEARCH FRAMEWORK IMPLEMENTATION
+# 🚀 Intelligent Investment Advisor using Machine Learning - Research Framework
 
 ## 📋 COMPLETE IMPLEMENTATION STATUS
 
@@ -196,9 +196,9 @@ python test_enhanced_prediction.py
 
 ## 📚 **RESEARCH PAPER ALIGNMENT**
 
-Your original abstract mentioned:
+Your original abstract:
 
-> *"hybrid GNN-LSTM forecasting framework that incorporates three unique enhancements. First, technical indicators are clustered into correlated and non-correlated groups, enabling the model to process diverse dependencies more effectively. Second, we integrate ontology-driven sentiment analysis, which extracts structured relationships from financial news (e.g., company → event → market impact), moving beyond simple sentiment polarity. Third, these features are fused with temporal and relational modeling through the GNN-LSTM hybrid, enabling more accurate and interpretable predictions."*
+> *"Stock market forecasting is a challenging task because financial data exhibit randomness, nonlinear behavior, and strong dependence on multiple interconnected economic and market factors. Though temporal dependencies are captured nicely by Long Short-Term Memory(LSTM) networks and inter stock relations are represented by Graph Neural Networks(GNNs), most current techniques mainly focus on price based relations or simple sentiment polarities without considering structured knowledge incorporation and multi type feature coupling. This paper presents a hybrid GNN–LSTM based forecasting model for stock market prediction in real time using clustering for capturing correlated behaviors for effective prediction and introducing user login system to store past data by incorporating three key innovations. First, technical indicators are grouped into correlated and non-correlated sets to enable more effective learning of diverse dependencies by clustering methodology. Second, an ontology-guided sentiment analysis module is introduced to extract structured semantic relationships from financial news. Third, clustered technical features and semantic features are fused and modeled over time using the proposed GNN–LSTM architecture. Experimental results show that the proposed model achieves 94.8% accuracy and consistently outperforms traditional forecasting models, demonstrating the effectiveness of proposed hybrid model for accurate stock market forecasting."*
 
 ### ✅ **COMPLETE IMPLEMENTATION ACHIEVED:**
 1. ✅ **Technical Indicator Clustering** - 20+ indicators grouped by correlation
