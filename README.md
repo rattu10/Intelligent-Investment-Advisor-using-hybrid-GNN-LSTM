@@ -52,7 +52,7 @@ chmod +x start.sh
 
 1. **Clone or download the project**
    ```bash
-   git clone https://github.com/your-username/stock-forecasting-gnn-lstm.git
+   git clone https://github.com/rattu10/Intelligent-Investment-Advisor-using-hybrid-GNN-LSTM.git
    cd stock-forecasting-gnn-lstm
    ```
 
