@@ -19,7 +19,7 @@ This web application implements a **hybrid GNN-LSTM forecasting framework** for 
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Flask (Python)
+- **Backend & Database**: Flask (Python), SQLite (SQLAlchemy)
 - **Machine Learning**: PyTorch, scikit-learn
 - **Graph Processing**: PyTorch Geometric, NetworkX
 - **Sentiment Analysis**: Transformers, FinBERT
